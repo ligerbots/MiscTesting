@@ -12,7 +12,8 @@ import java.util.Arrays;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
+
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.Encoder;
@@ -27,20 +28,16 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.EncoderWrapper;
 
+
 @SuppressWarnings("all")
 public class DriveTrain extends SubsystemBase {
-  /**
-   * Creates a new ExampleSubsystem.
-   */
 
-  WPI_TalonSRX leftLeader = new WPI_TalonSRX(Constants.LEADER_LEFT_TALON_ID);
-  WPI_TalonSRX rightLeader = new WPI_TalonSRX(Constants.LEADER_RIGHT_TALON_ID);
-  WPI_TalonSRX leftFollower = new WPI_TalonSRX(Constants.FOLLOWER_LEFT_TALON_ID);
-  WPI_TalonSRX rightFollower = new WPI_TalonSRX(Constants.FOLLOWER_RIGHT_TALON_ID);
+  // set CAN ID here:  
+  WPI_TalonFX testMotor = new WPI_TalonFX(0);
+  
+  // private final SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftLeader, leftFollower);
 
-  private final SpeedControllerGroup leftMotors = new SpeedControllerGroup(leftLeader, leftFollower);
-
-  private final SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightLeader, rightFollower);
+  // private final SpeedControllerGroup rightMotors = new SpeedControllerGroup(rightLeader, rightFollower);
 
   DifferentialDrive robotDrive;
 
@@ -59,15 +56,15 @@ public class DriveTrain extends SubsystemBase {
     rightEncoder.setReverseDirection(true);
 
 
-    robotDrive = new DifferentialDrive(leftMotors, rightMotors);
+    //robotDrive = new DifferentialDrive(leftMotors, rightMotors);
     leftEncoder.setDistancePerPulse(Constants.DISTANCE_PER_PULSE);
     rightEncoder.setDistancePerPulse(Constants.DISTANCE_PER_PULSE);
 
     odometry = new DifferentialDriveOdometry(Rotation2d.fromDegrees(0));
     
-    Arrays.asList(leftLeader, rightLeader, leftFollower, rightFollower)
-        .forEach((WPI_TalonSRX talon) -> talon.setNeutralMode(NeutralMode.Brake));
-
+    // Arrays.asList(leftLeader, rightLeader, leftFollower, rightFollower)
+    //     .forEach((WPI_TalonSRX talon) -> talon.setNeutralMode(NeutralMode.Brake));
+    testMotor.setNeutralMode(NeutralMode.Brake);
   }
 
   public Pose2d getPose () {
@@ -75,8 +72,8 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void go () {
-    leftLeader.set(ControlMode.PercentOutput, 0.7);
-    rightLeader.set(ControlMode.PercentOutput, 0.7);
+    // leftLeader.set(ControlMode.PercentOutput, 0.7);
+    // rightLeader.set(ControlMode.PercentOutput, 0.7);
   }
 
   public void arcadeDrive (double speed, double rotation) {
@@ -84,9 +81,13 @@ public class DriveTrain extends SubsystemBase {
   }
 
   public void tankDriveVolts (double leftVolts, double rightVolts) {
-    leftMotors.setVoltage(leftVolts);
-    rightMotors.setVoltage(-rightVolts);// make sure right is negative becuase sides are opposite
+    // leftMotors.setVoltage(leftVolts);
+    // rightMotors.setVoltage(-rightVolts);// make sure right is negative becuase sides are opposite
     robotDrive.feed();
+  }
+
+  public void testMotor(double speed) {
+    testMotor.set(speed);
   }
 
   public double getAverageEncoderDistance() {

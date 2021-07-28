@@ -47,7 +47,7 @@ public class DriveCommand extends CommandBase {
     SmartDashboard.putNumber("Left Encoder Distance", robotDrive.getLeftEncoderDistance());
     SmartDashboard.putNumber("Right Encoder Distance", robotDrive.getRightEncoderDistance());
     SmartDashboard.putNumber("Heading", robotDrive.getHeading());
-    robotDrive.arcadeDrive(throttle.getAsDouble(), turn.getAsDouble());
+    robotDrive.testMotor(throttle.getAsDouble());
   }
 
   // Called once the command ends or is interrupted.
